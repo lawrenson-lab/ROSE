@@ -251,7 +251,8 @@ def main():
 
 
     #GETTING THE CORRECT ANNOT FILE
-    cwd = os.getcwd()
+    cwd=os.path.normpath(__file__).rsplit(os.sep, maxsplit=2)[0]
+    #cwd = os.getcwd()
     genomeDict = {
         'HG18':'%s/annotation/hg18_refseq.ucsc' % (cwd),
         'MM9': '%s/annotation/mm9_refseq.ucsc' % (cwd),

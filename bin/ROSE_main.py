@@ -311,7 +311,8 @@ def main():
 
 
     #GETTING THE CORRECT ANNOT FILE
-    cwd = os.getcwd()
+    #cwd = os.getcwd()
+    cwd = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     genomeDict = {
         'HG18':'%s/annotation/hg18_refseq.ucsc' % (cwd),
         'MM9': '%s/annotation/mm9_refseq.ucsc' % (cwd),
@@ -379,7 +380,9 @@ def main():
     #IMPORTANT
     #CHANGE cmd1 and cmd2 TO PARALLELIZE OUTPUT FOR BATCH SUBMISSION
     #e.g. if using LSF cmd1 = "bsub python bamToGFF.py -f 1 -e 200 -r -m %s -b %s -i %s -o %s" % (nBin,bamFile,stitchedGFFFile,mappedOut1)
-
+    cwd = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(cwd)
+    print(os.getcwd())
     for bamFile in bamFileList:
 
         bamFileName = bamFile.split('/')[-1]
@@ -387,14 +390,14 @@ def main():
         #MAPPING TO THE STITCHED GFF
         mappedOut1 ='%s%s_%s_MAPPED.gff' % (mappedFolder,stitchedGFFName,bamFileName)
         #WILL TRY TO RUN AS A BACKGROUND PROCESS. BATCH SUBMIT THIS LINE TO IMPROVE SPEED
-        cmd1 = "ROSE_bamToGFF.py -f 1 -e 200 -r -m %s -b %s -i %s -o %s &" % (nBin,bamFile,stitchedGFFFile,mappedOut1)
+        cmd1 = "python ROSE_bamToGFF.py -f 1 -e 200 -r -m %s -b %s -i %s -o %s &" % (nBin,bamFile,stitchedGFFFile,mappedOut1)
         print(cmd1)
         os.system(cmd1)
 
         #MAPPING TO THE ORIGINAL GFF
         mappedOut2 ='%s%s_%s_MAPPED.gff' % (mappedFolder,inputName,bamFileName)
         #WILL TRY TO RUN AS A BACKGROUND PROCESS. BATCH SUBMIT THIS LINE TO IMPROVE SPEED
-        cmd2 = "ROSE_bamToGFF.py -f 1 -e 200 -r -m %s -b %s -i %s -o %s &" % (nBin,bamFile,inputGFFFile,mappedOut2)
+        cmd2 = "python ROSE_bamToGFF.py -f 1 -e 200 -r -m %s -b %s -i %s -o %s &" % (nBin,bamFile,inputGFFFile,mappedOut2)
         print(cmd2)
         os.system(cmd2)
         
